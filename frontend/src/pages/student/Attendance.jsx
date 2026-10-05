@@ -64,14 +64,6 @@ export default function StudentAttendance() {
           <div className="loader">Loading attendance...</div>
         ) : (
           <>
-            {overallPct < 75 && overallPct > 0 && (
-              <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>
-                <span style={{ fontSize: '1.2rem' }}>⚠️</span>
-                <strong>Attendance Warning:</strong> Your overall attendance is {overallPct}%. Please maintain above 75%.
-              </div>
-            )}
-
-
 
             {subjectStats.length > 0 && (
               <div className="table-card" style={{ marginBottom: '2rem', padding: '1.5rem' }}>

@@ -9,6 +9,12 @@ export default function StudentDashboard() {
 
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [notes, setNotes] = useState(localStorage.getItem('studentNotes') || '');
+
+  const handleNotesChange = (e) => {
+    setNotes(e.target.value);
+    localStorage.setItem('studentNotes', e.target.value);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -213,6 +219,19 @@ export default function StudentDashboard() {
                 <div className="progress-bar-wrap">
                   <div className="progress-bar-fill" style={{ width: data?.summary?.attendancePercentage || '0%' }}></div>
                 </div>
+              </div>
+
+              <div className="progress-widget" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1.5rem' }}>
+                <div className="section-header" style={{ marginBottom: '0' }}>
+                  <h3 style={{ fontSize: '1.1rem' }}>My Notepad</h3>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => { setNotes(''); localStorage.removeItem('studentNotes'); }}>Erase</span>
+                </div>
+                <textarea 
+                  value={notes}
+                  onChange={handleNotesChange}
+                  placeholder="Write your important things to do today..."
+                  style={{ width: '100%', height: '100px', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border)', resize: 'none', fontFamily: 'inherit', fontSize: '0.9rem' }}
+                ></textarea>
               </div>
             </div>
           </div>
