@@ -62,6 +62,19 @@ export default function StudentDashboard() {
   const isToday = selectedDate.getDate() === new Date().getDate() && 
                   selectedDate.getMonth() === new Date().getMonth() && 
                   selectedDate.getFullYear() === new Date().getFullYear();
+
+  const getAttendanceForClass = (classId) => {
+    if (!data?.records) return null;
+    const offset = selectedDate.getTimezoneOffset();
+    const adjustedDate = new Date(selectedDate.getTime() - (offset*60*1000));
+    const dateStr = adjustedDate.toISOString().split('T')[0];
+    
+    const record = data.records.find(r => 
+      (typeof r.classId === 'object' ? r.classId._id === classId : r.classId === classId) && 
+      r.date === dateStr
+    );
+    return record ? record.status : null;
+  };
   const timetableLabel = isToday ? 'Today' : selectedDayName;
 
   return (
@@ -113,9 +126,21 @@ export default function StudentDashboard() {
                   {displayClasses.length > 0 ? displayClasses.map(cls => (
                     <div key={cls._id} className="chic-timeline-item">
                       <div className="chic-timeline-time">{cls.startTime} - {cls.endTime}</div>
-                      <div className="chic-timeline-content">
-                        <div className="chic-timeline-title">{cls.subject}</div>
-                        <div className="chic-timeline-subtitle">Lecturer: {cls.teacherId?.name || 'Teacher'} • {cls.room}</div>
+                      <div className="chic-timeline-content" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+                        <div>
+                          <div className="chic-timeline-title">{cls.subject}</div>
+                          <div className="chic-timeline-subtitle">Lecturer: {cls.teacherId?.name || 'Teacher'} • {cls.room}</div>
+                        </div>
+                        {(() => {
+                          const status = getAttendanceForClass(cls._id);
+                          if (!status) return null;
+                          let badgeClass = 'badge-gray';
+                          let label = status;
+                          if (status === 'present') { badgeClass = 'badge-green'; label = 'Present'; }
+                          if (status === 'absent') { badgeClass = 'badge-red'; label = 'Absent'; }
+                          if (status === 'duty_leave') { badgeClass = 'badge-blue'; label = 'Duty Leave'; }
+                          return <span className={`badge ${badgeClass}`} style={{ fontSize: '0.7rem', padding: '0.2rem 0.5rem' }}>{label}</span>;
+                        })()}
                       </div>
                     </div>
                   )) : (

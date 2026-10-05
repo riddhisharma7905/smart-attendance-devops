@@ -186,6 +186,14 @@ export default function TeacherDashboard() {
             </div>
 
             <div className="dashboard-right">
+              <div className="chic-profile">
+                <div className="chic-profile-avatar">
+                  {user?.name ? user.name.replace(/^(Prof\.\s*|Dr\.\s*)/i, '').charAt(0).toUpperCase() : 'T'}
+                </div>
+                <h4>{user?.name || 'Faculty Member'}</h4>
+                <p>Faculty • Department of CSE</p>
+              </div>
+
               <div className="calendar-widget">
                 <div className="calendar-header">
                   <span>{calendarMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
