@@ -43,7 +43,11 @@ export default function TeacherTimetable() {
     const diff = targetDay - currentDay;
     const targetDate = new Date(now);
     targetDate.setDate(now.getDate() + diff);
-    return targetDate;
+    
+    // Adjust for local timezone offset before calling toISOString
+    const offset = targetDate.getTimezoneOffset();
+    const adjustedDate = new Date(targetDate.getTime() - (offset * 60 * 1000));
+    return adjustedDate;
   };
 
   const isAttendanceAllowed = (targetDate, startTime) => {

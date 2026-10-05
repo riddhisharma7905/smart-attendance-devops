@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import StudentSidebar from '../../components/StudentSidebar';
-import { getClasses } from '../../services/api';
+import { getClasses, getMyAttendance } from '../../services/api';
 
 export default function StudentTimetable() {
   const [classes, setClasses] = useState([]);
+  const [attendanceData, setAttendanceData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchClasses = async () => {
+    const fetchData = async () => {
       try {
-        const { data } = await getClasses();
-        setClasses(data);
+        const [classRes, attRes] = await Promise.all([
+          getClasses(),
+          getMyAttendance()
+        ]);
+        setClasses(classRes.data);
+        setAttendanceData(attRes.data.records);
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    fetchClasses();
+    fetchData();
   }, []);
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -26,6 +31,36 @@ export default function StudentTimetable() {
   const getClassForSlot = (day, time) => {
     const start = time.split(' - ')[0];
     return classes.find(c => c.day === day && c.startTime === start);
+  };
+
+  const currentWeekDates = React.useMemo(() => {
+    const today = new Date();
+    const currentDay = today.getDay();
+    const dates = {};
+    const daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    
+    const diff = currentDay === 0 ? -6 : 1 - currentDay;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + diff);
+    
+    for (let i = 0; i < 5; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      const offset = d.getTimezoneOffset();
+      const adjusted = new Date(d.getTime() - (offset*60*1000));
+      dates[daysArr[i + 1]] = adjusted.toISOString().split('T')[0];
+    }
+    return dates;
+  }, []);
+
+  const getAttendanceStatus = (classId, day) => {
+    if (!attendanceData) return null;
+    const dateStr = currentWeekDates[day];
+    const record = attendanceData.find(r => 
+      (typeof r.classId === 'object' ? r.classId._id === classId : r.classId === classId) && 
+      r.date === dateStr
+    );
+    return record ? record.status : null;
   };
 
   return (
@@ -61,7 +96,19 @@ export default function StudentTimetable() {
                         {classObj ? (
                           <div className="class-card" style={{ cursor: 'default' }}>
                             <div>
-                              <div className="class-subject">{classObj.subject}</div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div className="class-subject" style={{ paddingRight: '0.5rem' }}>{classObj.subject}</div>
+                                {(() => {
+                                  const status = getAttendanceStatus(classObj._id, day);
+                                  if (!status) return null;
+                                  let badgeClass = 'badge-gray';
+                                  let label = status;
+                                  if (status === 'present') { badgeClass = 'badge-green'; label = 'Present'; }
+                                  if (status === 'absent') { badgeClass = 'badge-red'; label = 'Absent'; }
+                                  if (status === 'duty_leave') { badgeClass = 'badge-blue'; label = 'Duty Leave'; }
+                                  return <span className={`badge ${badgeClass}`} style={{ fontSize: '0.65rem', padding: '0.15rem 0.4rem', whiteSpace: 'nowrap' }}>{label}</span>;
+                                })()}
+                              </div>
                               <div className="class-code">{classObj.subjectCode}</div>
                             </div>
                             <div className="class-details">
