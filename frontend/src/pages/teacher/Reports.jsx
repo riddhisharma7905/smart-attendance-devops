@@ -17,7 +17,6 @@ export default function TeacherReports() {
         const records = attRes.data.records;
         const students = stdRes.data.students || [];
         
-        // Calculate student-wise stats
         const studentStats = {};
         students.forEach(s => {
           studentStats[s._id] = { student: s, total: 0, present: 0 };

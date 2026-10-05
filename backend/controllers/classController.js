@@ -1,7 +1,6 @@
 const Class = require('../models/Class');
 const Student = require('../models/Student');
 
-// @desc    Get all classes for logged in user (teacher or student)
 const getMyClasses = async (req, res) => {
   try {
     if (req.user.role === 'teacher') {
@@ -23,8 +22,6 @@ const getMyClasses = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-
-// @desc    Get students for a specific class
 const getClassStudents = async (req, res) => {
   try {
     const classObj = await Class.findById(req.params.classId);
@@ -32,7 +29,6 @@ const getClassStudents = async (req, res) => {
       return res.status(404).json({ message: 'Class not found' });
     }
     
-    // Check if the teacher owns this class
     if (classObj.teacherId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to view this class' });
     }

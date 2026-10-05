@@ -37,7 +37,6 @@ const seedDB = async () => {
       teachers.push(t);
     }
 
-    // Dynamic Schedule Generator
     const classesData = [];
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const timeSlots = [
@@ -51,7 +50,7 @@ const seedDB = async () => {
 
     const sems = [
       {
-        sem: 1, // 20 Credits (4*4 + 3*1 + 1*1)
+        sem: 1, 
         subjects: [
           { name: 'Introduction to Programming', code: 'CSE1101', t: 0, cr: 4 },
           { name: 'Mathematics I', code: 'MAT1101', t: 1, cr: 4 },
@@ -62,7 +61,7 @@ const seedDB = async () => {
         ]
       },
       {
-        sem: 3, // 20 Credits
+        sem: 3, 
         subjects: [
           { name: 'Data Structures', code: 'CSE2101', t: 5, cr: 4 },
           { name: 'DBMS', code: 'CSE2102', t: 6, cr: 4 },
@@ -73,7 +72,7 @@ const seedDB = async () => {
         ]
       },
       {
-        sem: 5, // 20 Credits
+        sem: 5, 
         subjects: [
           { name: 'Operating Systems', code: 'CSE3101', t: 0, cr: 4 },
           { name: 'Computer Networks', code: 'CSE3102', t: 1, cr: 4 },
@@ -84,7 +83,7 @@ const seedDB = async () => {
         ]
       },
       {
-        sem: 7, // 6 Credits
+        sem: 7, 
         subjects: [
           { name: 'Machine Learning', code: 'CSE4101', t: 5, cr: 3 },
           { name: 'Cloud Computing', code: 'CSE4102', t: 6, cr: 3 }
@@ -137,7 +136,6 @@ const seedDB = async () => {
     const firstNames = ['Aarav', 'Vivaan', 'Aditya', 'Vihaan', 'Arjun', 'Sai', 'Reyansh', 'Ayaan', 'Krishna', 'Ishaan', 'Shaurya', 'Atharv', 'Rishi', 'Karan', 'Rohit', 'Siddharth', 'Amit', 'Vikram', 'Rohan', 'Raj', 'Rahul', 'Dev', 'Neel', 'Jay', 'Aryan', 'Kiran', 'Prem', 'Ananya', 'Diya', 'Suhani', 'Riya', 'Aanya', 'Pari', 'Sanya', 'Khushi', 'Shruti', 'Neha', 'Pooja', 'Sneha', 'Nisha', 'Tanvi', 'Anjali', 'Maya', 'Meera', 'Roshni', 'Kritika', 'Nandini', 'Priya', 'Sonal', 'Kavya'];
     const lastNames = ['Sharma', 'Verma', 'Gupta', 'Patel', 'Singh', 'Kumar', 'Das', 'Reddy', 'Joshi', 'Chauhan', 'Rajput', 'Bose', 'Yadav', 'Malhotra', 'Kapoor', 'Mehta', 'Nair', 'Pillai', 'Iyer', 'Menon'];
 
-    // Generate Students
     const generateStudents = async (sem, prefix) => {
       for (let i = 1; i <= 30; i++) {
         const rollNum = `${prefix}CSE${i.toString().padStart(3, '0')}`;

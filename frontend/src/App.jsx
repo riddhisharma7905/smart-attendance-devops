@@ -4,7 +4,6 @@ import RoleProtectedRoute from './components/RoleProtectedRoute';
 
 import Login from './pages/Login';
 
-// Teacher Pages
 import TeacherDashboard from './pages/teacher/Dashboard';
 import TeacherTimetable from './pages/teacher/Timetable';
 import TeacherStudents from './pages/teacher/Students';
@@ -13,7 +12,6 @@ import TeacherClassAttendance from './pages/teacher/ClassAttendance';
 import TeacherReports from './pages/teacher/Reports';
 import TeacherProfile from './pages/teacher/Profile';
 
-// Student Pages
 import StudentDashboard from './pages/student/Dashboard';
 import StudentTimetable from './pages/student/Timetable';
 import StudentAttendance from './pages/student/Attendance';
@@ -31,11 +29,9 @@ export default function App() {
   return (
     <AuthProvider>
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<DefaultRoute />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Teacher Routes */}
         <Route path="/teacher/dashboard" element={
           <RoleProtectedRoute allowedRoles={['teacher']}>
             <TeacherDashboard />
@@ -72,7 +68,6 @@ export default function App() {
           </RoleProtectedRoute>
         } />
 
-        {/* Student Routes */}
         <Route path="/student/dashboard" element={
           <RoleProtectedRoute allowedRoles={['student']}>
             <StudentDashboard />
@@ -94,7 +89,6 @@ export default function App() {
           </RoleProtectedRoute>
         } />
 
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>

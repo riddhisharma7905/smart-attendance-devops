@@ -10,7 +10,6 @@ export default function RoleProtectedRoute({ children, allowedRoles }) {
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    // Redirect based on their actual role if they try to access something they shouldn't
     if (user.role === 'teacher') return <Navigate to="/teacher/dashboard" replace />;
     if (user.role === 'student') return <Navigate to="/student/dashboard" replace />;
     return <Navigate to="/login" replace />;
